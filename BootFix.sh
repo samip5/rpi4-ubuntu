@@ -201,6 +201,13 @@ EOF
 fi
 
 
+# Tweak cmdline for Kubernetes / Docker
+echo "Tweaking cmdline.conf for Docker"
+cat <<EOF | sudo tee "$mntBoot/cmdline.txt">/dev/null
+# The cgroup ones are recommended for Docker and Kubernetes requires them
+net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4 elevator=deadline rootwait fixrtc cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 swapaccount=1
+EOF
+
 # Create script to automatically decompress kernel (source: https://www.raspberrypi.org/forums/viewtopic.php?t=278791)
 echo "Creating script to automatically decompress kernel..."
 cat << \EOF | sudo tee "$mntBoot/auto_decompress_kernel">/dev/null
